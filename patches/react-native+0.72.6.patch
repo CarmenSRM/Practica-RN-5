@@ -1,0 +1,233 @@
+diff --git a/node_modules/react-native/Libraries/Core/ReactNativeVersion.js b/node_modules/react-native/Libraries/Core/ReactNativeVersion.js
+index 6dab165..d6749c7 100644
+--- a/node_modules/react-native/Libraries/Core/ReactNativeVersion.js
++++ b/node_modules/react-native/Libraries/Core/ReactNativeVersion.js
+@@ -12,6 +12,6 @@
+ exports.version = {
+   major: 0,
+   minor: 72,
+-  patch: 5,
++  patch: 6,
+   prerelease: null,
+ };
+diff --git a/node_modules/react-native/Libraries/vendor/emitter/EventEmitter.js b/node_modules/react-native/Libraries/vendor/emitter/EventEmitter.js
+index 6bd2025..a98ce92 100644
+--- a/node_modules/react-native/Libraries/vendor/emitter/EventEmitter.js
++++ b/node_modules/react-native/Libraries/vendor/emitter/EventEmitter.js
+@@ -109,7 +109,9 @@ export default class EventEmitter<TEventToArgsMap: {...}>
+       Registration<$ElementType<TEventToArgsMap, TEvent>>,
+     > = this._registry[eventType];
+     if (registrations != null) {
+-      for (const registration of [...registrations]) {
++      // Copy `registrations` to take a snapshot when we invoke `emit`, in case
++      // registrations are added or removed when listeners are invoked.
++      for (const registration of Array.from(registrations)) {
+         registration.listener.apply(registration.context, args);
+       }
+     }
+diff --git a/node_modules/react-native/React/Base/RCTVersion.m b/node_modules/react-native/React/Base/RCTVersion.m
+index 5e55a32..3cfd3c2 100644
+--- a/node_modules/react-native/React/Base/RCTVersion.m
++++ b/node_modules/react-native/React/Base/RCTVersion.m
+@@ -23,7 +23,7 @@ NSDictionary* RCTGetReactNativeVersion(void)
+     __rnVersion = @{
+                   RCTVersionMajor: @(0),
+                   RCTVersionMinor: @(72),
+-                  RCTVersionPatch: @(5),
++                  RCTVersionPatch: @(6),
+                   RCTVersionPrerelease: [NSNull null],
+                   };
+   });
+diff --git a/node_modules/react-native/ReactAndroid/gradle.properties b/node_modules/react-native/ReactAndroid/gradle.properties
+index 828a275..7c3b5d2 100644
+--- a/node_modules/react-native/ReactAndroid/gradle.properties
++++ b/node_modules/react-native/ReactAndroid/gradle.properties
+@@ -1,4 +1,4 @@
+-VERSION_NAME=0.72.5
++VERSION_NAME=0.72.6
+ GROUP=com.facebook.react
+ 
+ # JVM Versions
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java
+index a6694a8..f9da698 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java
+@@ -17,6 +17,6 @@ public class ReactNativeVersion {
+   public static final Map<String, Object> VERSION = MapBuilder.<String, Object>of(
+       "major", 0,
+       "minor", 72,
+-      "patch", 5,
++      "patch", 6,
+       "prerelease", null);
+ }
+diff --git a/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h b/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h
+index 1bea8e0..ffabd8f 100644
+--- a/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h
++++ b/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h
+@@ -17,7 +17,7 @@ namespace facebook::react {
+ constexpr struct {
+   int32_t Major = 0;
+   int32_t Minor = 72;
+-  int32_t Patch = 5;
++  int32_t Patch = 6;
+   std::string_view Prerelease = "";
+ } ReactNativeVersion;
+ 
+diff --git a/node_modules/react-native/index.js b/node_modules/react-native/index.js
+index 7149c64..c962062 100644
+--- a/node_modules/react-native/index.js
++++ b/node_modules/react-native/index.js
+@@ -380,44 +380,16 @@ module.exports = {
+   },
+   // Deprecated Prop Types
+   get ColorPropType(): $FlowFixMe {
+-    console.error(
+-      'ColorPropType will be removed from React Native, along with all ' +
+-        'other PropTypes. We recommend that you migrate away from PropTypes ' +
+-        'and switch to a type system like TypeScript. If you need to ' +
+-        'continue using ColorPropType, migrate to the ' +
+-        "'deprecated-react-native-prop-types' package.",
+-    );
+-    return require('deprecated-react-native-prop-types').ColorPropType;
++    return require("deprecated-react-native-prop-types").ColorPropType
+   },
+   get EdgeInsetsPropType(): $FlowFixMe {
+-    console.error(
+-      'EdgeInsetsPropType will be removed from React Native, along with all ' +
+-        'other PropTypes. We recommend that you migrate away from PropTypes ' +
+-        'and switch to a type system like TypeScript. If you need to ' +
+-        'continue using EdgeInsetsPropType, migrate to the ' +
+-        "'deprecated-react-native-prop-types' package.",
+-    );
+-    return require('deprecated-react-native-prop-types').EdgeInsetsPropType;
++    return require("deprecated-react-native-prop-types").EdgeInsetsPropType
+   },
+   get PointPropType(): $FlowFixMe {
+-    console.error(
+-      'PointPropType will be removed from React Native, along with all ' +
+-        'other PropTypes. We recommend that you migrate away from PropTypes ' +
+-        'and switch to a type system like TypeScript. If you need to ' +
+-        'continue using PointPropType, migrate to the ' +
+-        "'deprecated-react-native-prop-types' package.",
+-    );
+-    return require('deprecated-react-native-prop-types').PointPropType;
++    return require("deprecated-react-native-prop-types").PointPropType
+   },
+   get ViewPropTypes(): $FlowFixMe {
+-    console.error(
+-      'ViewPropTypes will be removed from React Native, along with all ' +
+-        'other PropTypes. We recommend that you migrate away from PropTypes ' +
+-        'and switch to a type system like TypeScript. If you need to ' +
+-        'continue using ViewPropTypes, migrate to the ' +
+-        "'deprecated-react-native-prop-types' package.",
+-    );
+-    return require('deprecated-react-native-prop-types').ViewPropTypes;
++    return require("deprecated-react-native-prop-types").ViewPropTypes
+   },
+ };
+ 
+diff --git a/node_modules/react-native/scripts/cocoapods/__tests__/utils-test.rb b/node_modules/react-native/scripts/cocoapods/__tests__/utils-test.rb
+index 845e608..47d6c63 100644
+--- a/node_modules/react-native/scripts/cocoapods/__tests__/utils-test.rb
++++ b/node_modules/react-native/scripts/cocoapods/__tests__/utils-test.rb
+@@ -526,7 +526,7 @@ class UtilsTests < Test::Unit::TestCase
+         # Assert
+         user_project_mock.build_configurations.each do |config|
+             assert_equal("$(inherited) _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION", config.build_settings["GCC_PREPROCESSOR_DEFINITIONS"])
+-            assert_equal("$(inherited) -Wl -ld_classic ", config.build_settings["OTHER_LDFLAGS"])
++            assert_equal("$(inherited) -Wl -ld_classic", config.build_settings["OTHER_LDFLAGS"])
+         end
+ 
+         # User project and Pods project
+@@ -576,7 +576,7 @@ class UtilsTests < Test::Unit::TestCase
+         # Assert
+         user_project_mock.build_configurations.each do |config|
+             assert_equal("$(inherited) _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION", config.build_settings["GCC_PREPROCESSOR_DEFINITIONS"])
+-            assert_equal("$(inherited) ", config.build_settings["OTHER_LDFLAGS"])
++            assert_equal("$(inherited)", config.build_settings["OTHER_LDFLAGS"])
+         end
+ 
+         # User project and Pods project
+diff --git a/node_modules/react-native/scripts/cocoapods/utils.rb b/node_modules/react-native/scripts/cocoapods/utils.rb
+index d34b17e..d4bf3a0 100644
+--- a/node_modules/react-native/scripts/cocoapods/utils.rb
++++ b/node_modules/react-native/scripts/cocoapods/utils.rb
+@@ -140,7 +140,7 @@ class ReactNativePodsUtils
+                 if self.is_using_xcode15_or_greter(:xcodebuild_manager => xcodebuild_manager)
+                     self.add_value_to_setting_if_missing(config, other_ld_flags_key, xcode15_compatibility_flags)
+                 else
+-                    self.remove_value_to_setting_if_present(config, other_ld_flags_key, xcode15_compatibility_flags)
++                    self.remove_value_from_setting_if_present(config, other_ld_flags_key, xcode15_compatibility_flags)
+                 end
+             end
+             project.save()
+@@ -298,20 +298,26 @@ class ReactNativePodsUtils
+ 
+     def self.add_value_to_setting_if_missing(config, setting_name, value)
+         old_config = config.build_settings[setting_name]
+-        if !old_config.include?(value)
+-            config.build_settings[setting_name] << value
++        if old_config.is_a?(Array)
++            old_config = old_config.join(" ")
++        end
++
++        trimmed_value = value.strip()
++        if !old_config.include?(trimmed_value)
++            config.build_settings[setting_name] = "#{old_config.strip()} #{trimmed_value}".strip()
+         end
+     end
+ 
+-    def self.remove_value_to_setting_if_present(config, setting_name, value)
++    def self.remove_value_from_setting_if_present(config, setting_name, value)
+         old_config = config.build_settings[setting_name]
+-        if old_config.include?(value)
+-            # Old config can be either an Array or a String
+-            if old_config.is_a?(Array)
+-                old_config = old_config.join(" ")
+-            end
+-            new_config = old_config.gsub(value,  "")
+-            config.build_settings[setting_name] = new_config
++        if old_config.is_a?(Array)
++            old_config = old_config.join(" ")
++        end
++
++        trimmed_value = value.strip()
++        if old_config.include?(trimmed_value)
++            new_config = old_config.gsub(trimmed_value,  "")
++            config.build_settings[setting_name] = new_config.strip()
+         end
+     end
+ 
+diff --git a/node_modules/react-native/sdks/hermesc/linux64-bin/hermesc b/node_modules/react-native/sdks/hermesc/linux64-bin/hermesc
+index 63ce1c7..5bace15 100644
+Binary files a/node_modules/react-native/sdks/hermesc/linux64-bin/hermesc and b/node_modules/react-native/sdks/hermesc/linux64-bin/hermesc differ
+diff --git a/node_modules/react-native/sdks/hermesc/osx-bin/hermesc b/node_modules/react-native/sdks/hermesc/osx-bin/hermesc
+index 6e18ba8..fd5ac3e 100644
+Binary files a/node_modules/react-native/sdks/hermesc/osx-bin/hermesc and b/node_modules/react-native/sdks/hermesc/osx-bin/hermesc differ
+diff --git a/node_modules/react-native/sdks/hermesc/win64-bin/hermesc.exe b/node_modules/react-native/sdks/hermesc/win64-bin/hermesc.exe
+index 6e7137e..7c8ee2a 100644
+Binary files a/node_modules/react-native/sdks/hermesc/win64-bin/hermesc.exe and b/node_modules/react-native/sdks/hermesc/win64-bin/hermesc.exe differ
+diff --git a/node_modules/react-native/template/Gemfile b/node_modules/react-native/template/Gemfile
+index 1fa2c2e..6a7d5c7 100644
+--- a/node_modules/react-native/template/Gemfile
++++ b/node_modules/react-native/template/Gemfile
+@@ -3,4 +3,5 @@ source 'https://rubygems.org'
+ # You may use http://rbenv.org/ or https://rvm.io/ to install and use this version
+ ruby ">= 2.6.10"
+ 
+-gem 'cocoapods', '~> 1.12'
++gem 'cocoapods', '~> 1.13'
++gem 'activesupport', '>= 6.1.7.3', '< 7.1.0'
+diff --git a/node_modules/react-native/template/package.json b/node_modules/react-native/template/package.json
+index b7e4eb4..96710f5 100644
+--- a/node_modules/react-native/template/package.json
++++ b/node_modules/react-native/template/package.json
+@@ -11,7 +11,7 @@
+   },
+   "dependencies": {
+     "react": "18.2.0",
+-    "react-native": "0.72.5"
++    "react-native": "0.72.6"
+   },
+   "devDependencies": {
+     "@babel/core": "^7.20.0",
